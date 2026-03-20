@@ -32,14 +32,14 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <a href="#" className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
-                <span className="text-accent font-bold text-lg">S</span>
+                <span className="text-accent font-bold text-sm">SW</span>
               </div>
               <span className="text-xl font-bold tracking-tight">
-                Simple<span className="text-accent">X</span>
+                Simplex<span className="text-accent">Work</span>
               </span>
             </a>
             <p className="text-muted text-sm leading-relaxed max-w-sm mb-6">
-              SimpleX LLC — full-spectrum software engineering.
+              SimplexWork — full-spectrum software engineering.
               From web to mobile, AI to Web3 — we build the future.
             </p>
             <div className="flex gap-4">
@@ -80,7 +80,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-border-color flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted">
-            &copy; {new Date().getFullYear()} SimpleX LLC. All rights reserved.
+            &copy; {new Date().getFullYear()} SimplexWork. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a

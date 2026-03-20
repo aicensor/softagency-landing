@@ -49,7 +49,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <div className="text-sm text-muted mb-0.5">You can email us here</div>
-                  <div className="text-foreground font-medium">hello@simplex.dev</div>
+                  <div className="text-foreground font-medium">hello@simplexwork.com</div>
                 </div>
               </div>
               <div className="flex items-start gap-4">

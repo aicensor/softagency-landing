@@ -38,10 +38,10 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
             <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center group-hover:bg-accent/20 transition-all duration-300">
-              <span className="text-accent font-bold text-lg">S</span>
+              <span className="text-accent font-bold text-sm">SW</span>
             </div>
             <span className="text-xl font-bold tracking-tight">
-              Simple<span className="text-accent">X</span>
+              Simplex<span className="text-accent">Work</span>
             </span>
           </a>
 

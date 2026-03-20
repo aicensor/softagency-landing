@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SimpleX LLC — Full-Spectrum Software Engineering",
+  title: "SimplexWork — Full-Spectrum Software Engineering",
   description:
     "We engineer digital excellence. Web, mobile, AI, e-commerce, Web3 — built with bleeding-edge technology and obsessive attention to detail.",
   keywords: [

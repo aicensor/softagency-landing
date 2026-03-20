@@ -206,13 +206,13 @@ export default function Hero() {
 
             {/* Heading + desc + CTA */}
             <div className="max-w-xl">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 <motion.div
                   key={slide.id + "-text"}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.4 }}
                 >
                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black italic leading-[1.05] tracking-tight mb-6 text-white whitespace-pre-line">
                     {slide.title}

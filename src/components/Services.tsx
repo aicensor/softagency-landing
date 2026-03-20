@@ -8,17 +8,17 @@ const AUTO_SCROLL_DELAY = 6000;
 
 const categories = [
   {
-    id: "consulting",
-    title: "IT Consulting",
+    id: "webmobile",
+    title: "Web & Mobile App Development",
     description:
-      "Strategic technology guidance for ambitious businesses. We help you define product strategy, validate ideas, and select the right architecture — ensuring your investments drive long-term growth.",
-    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&q=80",
+      "Enterprise-grade web applications and cross-platform mobile apps. React, Next.js, Flutter, React Native — we choose the right tools for your product and scale.",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80",
     subServices: [
-      "Technical Audits",
-      "AI Readiness Assessment",
-      "CTO-as-a-Service",
-      "Architecture Review",
-      "Digital Transformation Strategy",
+      "Web Applications",
+      "Mobile Apps",
+      "Progressive Web Apps",
+      "API Development",
+      "Cross-Platform Solutions",
     ],
   },
   {
@@ -50,17 +50,17 @@ const categories = [
     ],
   },
   {
-    id: "webmobile",
-    title: "Web & Mobile App Development",
+    id: "ecommerce",
+    title: "E-Commerce & Web3",
     description:
-      "Enterprise-grade web applications and cross-platform mobile apps. React, Next.js, Flutter, React Native — we choose the right tools for your product and scale.",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80",
+      "Headless commerce platforms, custom storefronts, smart contracts, DApps, and DeFi protocols. We build the future of digital transactions and decentralized applications.",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80",
     subServices: [
-      "Web Applications",
-      "Mobile Apps",
-      "Progressive Web Apps",
-      "API Development",
-      "Cross-Platform Solutions",
+      "Headless Commerce",
+      "Smart Contracts",
+      "DeFi & DApps",
+      "NFT Platforms",
+      "Payment Integration",
     ],
   },
   {
@@ -92,17 +92,17 @@ const categories = [
     ],
   },
   {
-    id: "ecommerce",
-    title: "E-Commerce & Web3",
+    id: "consulting",
+    title: "IT Consulting",
     description:
-      "Headless commerce platforms, custom storefronts, smart contracts, DApps, and DeFi protocols. We build the future of digital transactions and decentralized applications.",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80",
+      "Strategic technology guidance for ambitious businesses. We help you define product strategy, validate ideas, and select the right architecture — ensuring your investments drive long-term growth.",
+    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&q=80",
     subServices: [
-      "Headless Commerce",
-      "Smart Contracts",
-      "DeFi & DApps",
-      "NFT Platforms",
-      "Payment Integration",
+      "Technical Audits",
+      "AI Readiness Assessment",
+      "CTO-as-a-Service",
+      "Architecture Review",
+      "Digital Transformation Strategy",
     ],
   },
   {

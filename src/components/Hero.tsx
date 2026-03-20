@@ -1,299 +1,359 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight, Star, Users } from "lucide-react";
 
-const SLIDE_DURATION = 10000;
+const SLIDE_DURATION = 8000;
+const TRANSITION_MS = 900;
 
 const slides = [
   {
     id: "engineering",
-    title: "SOFTWARE\nENGINEERING",
-    shortTitle: "SOFTWARE\nENGINEERING",
+    tag: "Software Engineering",
+    headingJSX: (
+      <>
+        Building digital <span className="gradient-text">products</span> that
+        drive real business <span className="gradient-text">growth</span>
+      </>
+    ),
     description:
-      "From cloud computing and embedded systems to legacy modernization and enterprise platforms, we deliver scalable industry-specific solutions that meet the highest quality standards.",
-    cta: { label: "LEARN MORE", href: "#services" },
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80",
+      "From web & mobile apps to AI systems and cloud infrastructure — we engineer scalable solutions with obsessive attention to quality.",
+    image:
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
   },
   {
     id: "design",
-    title: "PRODUCT\nDESIGN",
-    shortTitle: "PRODUCT\nDESIGN",
+    tag: "Product Design",
+    headingJSX: (
+      <>
+        Crafting <span className="gradient-text">user-centered</span> experiences
+        that <span className="gradient-text">stand out</span>
+      </>
+    ),
     description:
-      "Our design team combines research, business analysis, testing, and creativity to craft user-centered products that drive engagement and stand out in the market.",
-    cta: { label: "LEARN MORE", href: "#services" },
-    image: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1400&q=80",
+      "Our design team combines research, business analysis, testing, and creativity to craft products people love and businesses rely on.",
+    image:
+      "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&q=80",
   },
   {
     id: "ai",
-    title: "DATA\nSCIENCE & AI",
-    shortTitle: "DATA\nSCIENCE & AI",
+    tag: "Data Science & AI",
+    headingJSX: (
+      <>
+        Offering real-time <span className="gradient-text">visibility</span> into
+        your data by integrating <span className="gradient-text">AI</span>
+      </>
+    ),
     description:
-      "Leverage predictive models, generative AI, and intelligent automation to gain deeper insights, accelerate decisions, and boost your business value.",
-    cta: { label: "LEARN MORE", href: "#services" },
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1400&q=80",
+      "Leverage predictive models, generative AI, and intelligent automation to gain deeper insights, accelerate decisions, and boost value.",
+    image:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
   },
   {
     id: "consulting",
-    title: "CONSULTING",
-    shortTitle: "CONSULTING",
+    tag: "IT Consulting",
+    headingJSX: (
+      <>
+        Strategic <span className="gradient-text">technology</span> guidance for{" "}
+        <span className="gradient-text">ambitious</span> businesses
+      </>
+    ),
     description:
-      "We help you define product strategy, validate ideas, and select the right architecture and tools — ensuring your investments are aligned with long-term growth.",
-    cta: { label: "LEARN MORE", href: "#services" },
-    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1400&q=80",
+      "We help you define product strategy, validate ideas, and select the right architecture — ensuring your investments drive long-term growth.",
+    image:
+      "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80",
   },
 ];
 
-function SideTab({
-  slide,
-  onClick,
-  side,
-}: {
-  slide: (typeof slides)[0];
-  onClick: () => void;
-  side: "left" | "right";
-}) {
+// For infinite loop: [clone-last, ...originals, clone-first]
+// Index 0 = clone of slide 4 (consulting)
+// Index 1-4 = real slides
+// Index 5 = clone of slide 1 (engineering)
+const totalSlides = slides.length;
+
+function SlideContent({ slide }: { slide: (typeof slides)[0] }) {
   return (
-    <button
-      onClick={onClick}
-      className="group relative w-[90px] xl:w-[110px] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300"
-    >
-      {/* Blurred bg image */}
-      <img
-        src={slide.image}
-        alt={slide.shortTitle.replace("\n", " ")}
-        className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-110 group-hover:blur-0 group-hover:scale-105 transition-all duration-500"
-      />
-      <div className="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition-colors duration-300" />
+    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center h-full px-2">
+      {/* Left: Text */}
+      <div className="flex flex-col justify-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border-color bg-surface/50 backdrop-blur-sm mb-8 w-fit">
+          <span className="text-accent text-xs">✦</span>
+          <span className="text-sm font-medium text-foreground">
+            {slide.tag}
+          </span>
+        </div>
 
-      {/* Arrow icon — top corner */}
-      <div
-        className={`absolute top-4 ${side === "right" ? "right-4" : "left-4"} w-9 h-9 rounded-full bg-white flex items-center justify-center z-10 group-hover:scale-110 transition-transform`}
-      >
-        <ArrowRight size={15} className="text-black" />
-      </div>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-[4rem] font-bold leading-[1.1] tracking-tight mb-6">
+          {slide.headingJSX}
+        </h1>
 
-      {/* Vertical text */}
-      <div className="relative z-10 h-full flex items-center justify-center px-2">
-        <span
-          className="text-white font-black text-[13px] xl:text-[15px] tracking-[0.12em] whitespace-pre-line text-center leading-[1.3] uppercase"
-          style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
+        <p className="text-muted text-base md:text-lg leading-relaxed max-w-lg mb-10">
+          {slide.description}
+        </p>
+
+        <a
+          href="#contact"
+          className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-white text-sm font-bold tracking-wider rounded-full hover:bg-accent/90 transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,110,240,0.3)] group w-fit"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
-          {slide.shortTitle}
-        </span>
+          Get Started
+          <ArrowRight
+            size={16}
+            className="group-hover:translate-x-1 transition-transform"
+          />
+        </a>
       </div>
-    </button>
-  );
-}
 
-export default function Hero() {
-  const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const startTimeRef = useRef(Date.now());
+      {/* Right: Image */}
+      <div className="relative flex items-center justify-center">
+        <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-accent/5 border border-border-color">
+          <img
+            src={slide.image}
+            alt={slide.tag}
+            className="w-full h-[360px] md:h-[440px] object-cover pointer-events-none"
+            draggable={false}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#08081a]/40 via-transparent to-transparent" />
+        </div>
 
-  const goTo = useCallback((index: number) => {
-    setCurrent(index);
-    setProgress(0);
-    startTimeRef.current = Date.now();
-  }, []);
-
-  const next = useCallback(() => {
-    goTo((current + 1) % slides.length);
-  }, [current, goTo]);
-
-  const prev = useCallback(() => {
-    goTo((current - 1 + slides.length) % slides.length);
-  }, [current, goTo]);
-
-  useEffect(() => {
-    startTimeRef.current = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const pct = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(pct);
-      if (elapsed >= SLIDE_DURATION) {
-        setCurrent((p) => (p + 1) % slides.length);
-        startTimeRef.current = Date.now();
-        setProgress(0);
-      }
-    }, 50);
-    return () => clearInterval(interval);
-  }, [current]);
-
-  const slide = slides[current];
-
-  // Split tabs: slides before current go LEFT, slides after current go RIGHT
-  const leftTabs = slides.filter((_, i) => i < current);
-  const rightTabs = slides.filter((_, i) => i > current);
-
-  return (
-    <section className="pt-28 pb-8 px-4 md:px-8 lg:px-12">
-      <div
-        className="max-w-[1440px] mx-auto flex gap-3"
-        style={{
-          height: "calc(100vh - 150px)",
-          minHeight: "520px",
-          maxHeight: "720px",
-        }}
-      >
-        {/* ===== LEFT TABS ===== */}
-        {leftTabs.length > 0 && (
-          <div className="hidden lg:flex flex-row gap-3 w-auto">
-            {leftTabs.map((s) => {
-              const idx = slides.findIndex((sl) => sl.id === s.id);
-              return (
-                <SideTab
-                  key={s.id}
-                  slide={s}
-                  onClick={() => goTo(idx)}
-                  side="left"
-                />
-              );
-            })}
-          </div>
-        )}
-
-        {/* ===== MAIN SLIDE CARD ===== */}
-        <div className="relative flex-1 rounded-2xl overflow-hidden">
-          {/* Background image */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={slide.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.7 }}
-              className="absolute inset-0"
-            >
-              <img
-                src={slide.image}
-                alt={slide.title.replace("\n", " ")}
-                className="absolute inset-0 w-full h-full object-cover"
+        {/* Floating badge: Ratings */}
+        <div className="absolute -right-2 top-1/3 bg-white text-black rounded-xl px-4 py-3 shadow-xl flex items-center gap-2 z-20">
+          <div className="flex">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                size={14}
+                className="text-amber-400 fill-amber-400"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#08081a]/90 via-[#08081a]/50 to-[#08081a]/20" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#08081a]/80 via-transparent to-[#08081a]/10" />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Progress bar */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-white/10 z-30">
-            <div
-              className="h-full bg-white/70"
-              style={{ width: `${progress}%`, transition: "none" }}
-            />
+            ))}
           </div>
+          <span className="text-xs font-medium text-gray-500">|</span>
+          <span className="text-sm font-bold">4.9 Ratings</span>
+        </div>
 
-          {/* Nav arrows */}
-          <div className="absolute top-6 right-6 flex items-center gap-3 z-30">
-            <button
-              onClick={prev}
-              className="w-11 h-11 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/25 transition-all"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <button
-              onClick={next}
-              className="w-11 h-11 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/25 transition-all"
-            >
-              <ArrowRight size={16} />
-            </button>
+        {/* Floating badge: Clients */}
+        <div className="absolute -left-2 bottom-8 bg-white text-black rounded-xl px-5 py-3 shadow-xl flex items-center gap-3 z-20">
+          <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+            <Users size={18} className="text-accent" />
           </div>
-
-          {/* Content */}
-          <div className="relative z-20 h-full flex flex-col justify-between p-8 md:p-10 lg:p-12">
-            <div />
-
-            {/* Heading + desc + CTA */}
-            <div className="max-w-xl">
-              <AnimatePresence mode="popLayout">
-                <motion.div
-                  key={slide.id + "-text"}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black italic leading-[1.05] tracking-tight mb-6 text-white whitespace-pre-line">
-                    {slide.title}
-                  </h1>
-                  <p className="text-sm md:text-[15px] text-white/70 max-w-md mb-8 leading-relaxed">
-                    {slide.description}
-                  </p>
-                  <a
-                    href={slide.cta.href}
-                    className="inline-flex items-center px-8 py-3.5 bg-accent text-white text-sm font-bold tracking-wider rounded-full hover:bg-accent/90 transition-all duration-300 hover:shadow-[0_0_40px_rgba(124,110,240,0.3)]"
-                  >
-                    {slide.cta.label}
-                  </a>
-                </motion.div>
-              </AnimatePresence>
+          <div>
+            <div className="text-[11px] text-gray-500 leading-none">
+              Trusted By
             </div>
-
-            {/* Trust badges */}
-            <div className="flex items-center gap-5 md:gap-7 flex-wrap mt-8">
-              <div className="flex items-center gap-2">
-                <div className="w-12 h-12 rounded-lg bg-white/10 backdrop-blur-sm border border-white/15 flex flex-col items-center justify-center">
-                  <span className="text-[11px] font-bold text-white/90 leading-none">aws</span>
-                  <span className="text-[7px] text-white/50 leading-none mt-0.5">PARTNER</span>
-                </div>
-                <div className="text-[8px] text-white/40 leading-tight uppercase">
-                  <div>Advanced Tier</div>
-                  <div>Services</div>
-                </div>
-              </div>
-
-              <div>
-                <div className="text-[8px] text-white/40 uppercase tracking-wide">Reviewed on</div>
-                <div className="text-lg font-bold text-white/80 leading-none -mt-0.5">Clutch</div>
-                <div className="text-[9px] text-amber-400/80">★★★★★ <span className="text-white/40">57 REVIEWS</span></div>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="text-2xl font-black text-white/60 italic leading-none">ISO</span>
-                <div className="text-[9px] text-white/50 leading-tight">
-                  <div className="font-bold text-white/70">9001:2015</div>
-                  <div>UA230630</div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="text-2xl font-black text-white/60 italic leading-none">ISO</span>
-                <div className="text-[9px] text-white/50 leading-tight">
-                  <div className="font-bold text-white/70">27001:2013</div>
-                  <div>IND.22.1314/IS/U</div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <span className="text-xl font-bold text-white/70 italic tracking-wide" style={{ fontFamily: "Georgia, serif" }}>
-                  Forbes
-                </span>
-                <div className="text-[8px] text-white/40 leading-tight border-l border-white/20 pl-1.5 ml-0.5">
-                  <div>Technology</div>
-                  <div>Council</div>
-                </div>
-              </div>
+            <div className="text-lg font-black leading-tight">
+              900+ Clients
             </div>
           </div>
         </div>
 
-        {/* ===== RIGHT TABS ===== */}
-        {rightTabs.length > 0 && (
-          <div className="hidden lg:flex flex-row gap-3 w-auto">
-            {rightTabs.map((s) => {
-              const idx = slides.findIndex((sl) => sl.id === s.id);
-              return (
-                <SideTab
-                  key={s.id}
-                  slide={s}
-                  onClick={() => goTo(idx)}
-                  side="right"
-                />
-              );
-            })}
+        {/* Ambient glow */}
+        <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-accent/5 blur-[100px] rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+export default function Hero() {
+  // Internal index: 0 = clone-last, 1..4 = real, 5 = clone-first
+  const [internalIndex, setInternalIndex] = useState(1);
+  const [animated, setAnimated] = useState(true);
+  const dragStartX = useRef(0);
+  const dragCurrentX = useRef(0);
+  const isDragging = useRef(false);
+  const isJumping = useRef(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  // The extended slides array: [clone-last, slide0, slide1, slide2, slide3, clone-first]
+  const extendedSlides = [
+    slides[totalSlides - 1],
+    ...slides,
+    slides[0],
+  ];
+  const extendedCount = extendedSlides.length; // 6
+
+  // Real slide index (0-3)
+  const realIndex =
+    internalIndex <= 0
+      ? totalSlides - 1
+      : internalIndex > totalSlides
+      ? 0
+      : internalIndex - 1;
+
+  // After transition to a clone, silently jump to the real slide
+  const handleTransitionEnd = useCallback(() => {
+    if (internalIndex <= 0) {
+      // At clone-last → jump to real last
+      isJumping.current = true;
+      setAnimated(false);
+      setInternalIndex(totalSlides);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimated(true);
+          isJumping.current = false;
+        });
+      });
+    } else if (internalIndex > totalSlides) {
+      // At clone-first → jump to real first
+      isJumping.current = true;
+      setAnimated(false);
+      setInternalIndex(1);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimated(true);
+          isJumping.current = false;
+        });
+      });
+    }
+  }, [internalIndex]);
+
+  const goNext = useCallback(() => {
+    if (isJumping.current) return;
+    setAnimated(true);
+    setInternalIndex((p) => p + 1);
+  }, []);
+
+  const goPrev = useCallback(() => {
+    if (isJumping.current) return;
+    setAnimated(true);
+    setInternalIndex((p) => p - 1);
+  }, []);
+
+  const goToReal = useCallback((realIdx: number) => {
+    if (isJumping.current) return;
+    setAnimated(true);
+    setInternalIndex(realIdx + 1);
+  }, []);
+
+  // Auto-slide
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isDragging.current && !isJumping.current) {
+        goNext();
+      }
+    }, SLIDE_DURATION);
+    return () => clearInterval(timer);
+  }, [goNext]);
+
+  // Mouse drag
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (isJumping.current) return;
+    dragStartX.current = e.clientX;
+    dragCurrentX.current = e.clientX;
+    isDragging.current = true;
+    setAnimated(false);
+    setDragOffset(0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    dragCurrentX.current = e.clientX;
+    setDragOffset(e.clientX - dragStartX.current);
+  };
+
+  const finishDrag = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const diff = dragCurrentX.current - dragStartX.current;
+    setDragOffset(0);
+    setAnimated(true);
+    if (Math.abs(diff) > 80) {
+      if (diff < 0) goNext();
+      else goPrev();
+    }
+  };
+
+  // Touch
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isJumping.current) return;
+    dragStartX.current = e.touches[0].clientX;
+    dragCurrentX.current = e.touches[0].clientX;
+    isDragging.current = true;
+    setAnimated(false);
+    setDragOffset(0);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    dragCurrentX.current = e.touches[0].clientX;
+    setDragOffset(e.touches[0].clientX - dragStartX.current);
+  };
+
+  const finishTouch = () => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const diff = dragCurrentX.current - dragStartX.current;
+    setDragOffset(0);
+    setAnimated(true);
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) goNext();
+      else goPrev();
+    }
+  };
+
+  const wrapperWidth = wrapperRef.current?.offsetWidth || 1;
+  const slideWidthPercent = 100 / extendedCount;
+  const translateX =
+    -(internalIndex * slideWidthPercent) +
+    (dragOffset / wrapperWidth) * slideWidthPercent;
+
+  return (
+    <section
+      className="pt-28 pb-16 px-6 md:px-8 lg:px-12 relative overflow-hidden cursor-grab active:cursor-grabbing select-none"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={finishDrag}
+      onMouseLeave={() => {
+        if (isDragging.current) finishDrag();
+      }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={finishTouch}
+    >
+      {/* Subtle grid background */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div
+          ref={wrapperRef}
+          className="overflow-hidden"
+          style={{
+            height: "calc(100vh - 200px)",
+            minHeight: "520px",
+            maxHeight: "660px",
+          }}
+        >
+          <div
+            className="flex h-full"
+            style={{
+              width: `${extendedCount * 100}%`,
+              transform: `translate3d(${translateX}%, 0, 0)`,
+              transition: animated
+                ? `transform ${TRANSITION_MS}ms cubic-bezier(0.25, 0.1, 0.25, 1)`
+                : "none",
+            }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {extendedSlides.map((slide, i) => (
+              <div
+                key={`${slide.id}-${i}`}
+                className="h-full flex-shrink-0"
+                style={{ width: `${100 / extendedCount}%` }}
+              >
+                <SlideContent slide={slide} />
+              </div>
+            ))}
           </div>
-        )}
+        </div>
+
       </div>
     </section>
   );
